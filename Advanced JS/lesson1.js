@@ -74,7 +74,7 @@ var bar = 'bar';
 foo("var bar=42;");// eval treats str as actual code
 
 
-////////IIFE/////////
+////////IIFE///////// immediately invoked function expression
 
 var foo = "foo";
 
@@ -86,3 +86,81 @@ var foo = "foo";
 })();
 
 console.log(foo); //"foo"
+
+/////Block Scope with let ES6////////
+//let is the cousin of var-- attaches variable to block
+
+function foo() {
+	var bar = "bar";
+	for(let i =0; i<bar.length;i++){
+		console.log(bar.charAt(i));
+	}
+	console.log(i);
+}
+
+foo();
+
+//Let keyword does not hoist
+
+
+//Quiz 1//
+
+
+///Dynamic Scope//
+// Javascript has Lexical Scoping
+//Functions Create new Scope and curly braces with let
+//undeclared has not been declared but undefined means the variable doesnt currently have a value
+
+///////////Hoisting/////////////
+foo();
+
+var foo = 2;
+
+function foo(){
+	console.log("bar");
+}
+
+function foo(){
+	console.log("foo");
+}
+
+
+////////////////THIS////////////////
+
+//Every function while executing has a reference to its own execution context known as ;This'
+
+//'this' is like the address of a building where we are looking
+
+function foo() {
+	console.log(this.bar); //referencing an object that we can look up properties on
+}
+
+var bar = "bar1";
+var o2 = {bar: "bar2", foo:foo};
+var o3 = {bar: "bar3", foo: foo};
+
+foo();    // bar 1 //default this keyword to global, if 'strict', then undefined 
+o2.foo(); // bar 2 //implicit binding rule - object prop reference at call site - base object becomes "this";
+o3.foo(); // bar 3
+
+
+var o1 = {
+ bar: 'bar1',
+ foo: function(){
+ 	console.log(this.bar);
+ }
+
+};
+
+var o2 = {bar: "bar2", foo:foo};
+var bar = "bar3";
+
+var foo = o1.foo;
+
+o1.foo(); // "bar1"
+o2.foo(); //"bar2"
+foo(); //"bar3"
+
+
+
+
