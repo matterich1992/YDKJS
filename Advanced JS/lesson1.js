@@ -144,23 +144,180 @@ o2.foo(); // bar 2 //implicit binding rule - object prop reference at call site 
 o3.foo(); // bar 3
 
 
-var o1 = {
- bar: 'bar1',
- foo: function(){
- 	console.log(this.bar);
- }
-
+var obj1 = {
+	bar: "bar1",
+	foo: function(){
+		console.log(this.bar);
+	}
 };
 
-var o2 = {bar: "bar2", foo:foo};
-var bar = "bar3";
+var o2 = {bar: "bar2", foo: obj1.foo};
+var bar = "bar 3";
 
-var foo = o1.foo;
+var foo = obj1.foo;
 
-o1.foo(); // "bar1"
-o2.foo(); //"bar2"
-foo(); //"bar3"
+obj1.foo();
+o2.foo();
+foo();
 
+///////Binding/////
+
+function foo() {
+	var bar = "bar1";
+	baz();
+}
+
+function baz() {
+	console.log(this.bar);
+}
+
+var bar = 'bar2';
+
+foo(); //--> "bar 2" // default
+
+////Explicit Binding
+ //.call or .apply their first arg is a this
+
+function foo() {
+	console.log(this.bar);
+}
+
+var bar = "bar1";
+var obj = {bar: "bar2"};
+
+foo();//-->bar1;
+foo.call(obj); //-->'bar 2';
+
+
+// Hard- Binding
+
+function foo() {
+	console.log(this.bar);
+}
+
+var obj = {bar: "bar"};
+var obj2 = {bar: "bar2"};
+
+var orig = foo; // reference to the og function
+foo = function(){orig.call(obj);}; //overwrite the foo but will always be called with obj this bonding
+
+
+foo(); // --> 'bar'
+foo.call(obj2); // -->'bar'
+
+
+function bind (fn, o) {
+	return function() {
+		fn.call(o);
+	};
+}
+
+function foo() {
+	console.log(this.bar);
+}
+
+var obj = {bar: 'bar'};
+var obj2 = {bar: 'bar2'};
+
+	foo = bind(foo, obj);
+
+	foo(); // "bar";
+	foo.call(obj2); //???
+
+
+//// the 'new' keyword///////
+
+function foo() {
+	this.baz = "baz";
+	console.log(this.bar + " " + baz);
+}
+
+var bar = "bar";
+
+var baz = new foo(); // undefined undefined
+baz.baz();
+
+// four things that occur when new keyword is new
+//1. new object is created
+//2. object gets linked to a different object
+//3. bound as the new 'this' keyword
+//4. Implicitly inserts a return 
+
+// ''This' rules'
+
+//1. was it called with the new keyword
+//2. explicit with call, apply, bind
+//3. imlicit binding with owning/containing object
+//4. Default to 'global'
+
+
+
+/////////CLOSURE Advanced JS//////////
+// function remembers lexical scope even when function is executed outside lexical scope
+
+
+function foo() {
+	var bar  = 'bar';
+
+	function baz () {
+		console.log(bar);
+	}
+	bam(baz);
+}
+
+function bam (baz) {
+	baz();
+}
+
+foo(); // --> 'bar'
+
+
+function foo() {
+	var bar = "bar";
+
+	return function() {
+		console.log(bar);
+	};
+}
+
+function bam () {
+	foo()();
+}
+
+bam();
+
+
+function foo () {
+	var bar = 0;
+
+	setTimeout(function(){
+		console.log(bar++);
+	},100);
+	setTimeout(function(){
+		console.log(bar++);
+	},100);
+}
+
+foo();
+
+
+function foo() {
+	var bar = 0;
+
+	return function() {
+		bar++;
+	}
+}
+
+var x = foo();
+
+
+
+for(var i =1;i<=5; i++){
+	setTimeout(function(){
+		console.log('i: ' + i);
+	}, i*1000);
+}
 
 
 
