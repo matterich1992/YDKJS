@@ -319,5 +319,176 @@ for(var i =1;i<=5; i++){
 	}, i*1000);
 }
 
+// we want a scope for each iteration
+
+for (var i =1;i<=5;i++){
+	(function(i){
+		setTimeout(function(){
+			console.log("i: " + i);
+		}, i*1000);
+	})(i);
+}
+
+
+//Closure Loops and Block Scope//
+for(let i =1l i<=5;i++){
+	setTimeout(function(){
+		console.log(i);
+	}, i*1000);
+}
+// New let creates new instance of i for each iteration
+
+// Module Pattern
+
+// outer wrapping funciton that is executed
+// one or more inner functions must be returned
+
+var foo = (function(){
+
+	var o = {bar: "bar"};
+
+	return { 
+	bar: function(){
+		console.log(o.bar);
+	}
+  };
+})();
+
+foo.bar();  //bar
+
+
+var foo = (function(){
+	var publicAPI = {
+		bar: function(){
+			publicAPI.baz();
+		},
+		baz: function() {
+			console.log("baz");
+		}
+	};
+	return publicAPI;
+})();
+
+foo.bar();
+
+// Modern Module Pattern
+
+define("foo", function(){
+
+	var o = {bar: "bar"};
+
+	return {
+		bar: function() {
+			console.log(o.bar);
+		}
+	};
+
+});
+
+
+//Object Oriented Programming//
+
+// Common Patterns
+// "inheritance" vs "Behavior Delegation"
+
+// Prototype Mechanism //
+
+
+//Every single object is built by a construtor function
+// A constructor makes an object linked to it's own prototype
+// in Javascript there is no copy made, but they actually create a new object that is linked to
+
+
+function Foo(who) {
+	this.me = who;
+}
+
+Foo.prototype.identify = function(){
+	return " I am " + this.me;
+};
+
+var a1 = new Foo("a1"); // Brand new Object has been created
+var a2 = new Foo("a2"); // Brand new object that gets "me" property as well
+
+
+a2.speak = function(){
+	alert("Hello," + this.identify() + ".");
+};
+
+a1.constructor ===Foo;
+a1.constructor ===a2.constructor;
+
+a1.__proto__ === Foo.prototype; 
+a1.__proto__ === a2.__proto__;
+
+// Both a1 and a2 point to the same Foo Object "Foo.prototype"
+// Prototype linkages
+// can call a1.identify; --> 'this' is now a1
+// can call a2. identify; -- 'this' is now a2
+
+
+// rewrite the code in a different way
+function Foo() {
+	this.me = who;
+}
+
+Foo.protoype.identify = function(){
+	return 'I am ' + this.me;
+};
+
+var a1 = Foo("a1");
+a1.identify(); // " I am a1 "
+
+// Will always find this guy because it is directly on the object
+a1.identify = function(){ // Adding a new function directly to "a1"
+	alert("Hello, " +
+		Foo.prototype.identify.call(this) + "."
+	 )
+};
+
+a1.identify();// "Hello, I am a1"
+
+// Now we have to use the crazy syntax of Foo.prototype.identify.call(this)or "a1";
+// Use different method names to delegate to other methods so that there is no overlap
+// 'this" is always refernced at the call site --> see next code block
+
+function Foo() {
+	this.me = who;
+}
+
+Foo.prototype.identify = function() {
+	return "I am " + this.me;
+}
+
+Foo.prototype.speak = function(){
+	alert("Hello " + this.identify() + ".");
+};
+
+var a1 = new Foo("a1"); // "a1" now becomes this in all versions above of Foo prototype
+
+
+a1.speak(); // "Hello, I am a1."
+a1.identify(); // "I am a1"
+
+//a1 delegates up the prototype chain to Foo function that has all methods from prototype
+// Examples of prototype linkage behavior delegation^^
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
