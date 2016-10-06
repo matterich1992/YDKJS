@@ -493,7 +493,7 @@ function Bar (who){
 }
 
 //Bar.prototype = new Foo();
-Bar.prototype = Object.create(Foo.prototype);
+Bar.prototype = Object.create(Foo.prototype); // Utility Object.Create - used without calling the Foo function
 
 Bar.prototype.speak = function() {
 	return "Hello " + this.identify() + ".";
@@ -506,7 +506,141 @@ b1.speak();// Hello I am b1.
 b2.speak(); // Hello i am b2.
 
 
+//Constructor --> a function with the 'new' keyword
+//How to find where the prototype is linked to
+//__.proto__ / Object.getprototypeof()//.constructor.prototype
 
+/////////////////////////////////////////ASIDE/////////////////////////////////
+
+// JS Weird Parts Slight Deviation Refresher
+ var person = {
+ 	firstName: Default,
+ 	lastName: Default,
+ 	getFullName: function(){
+ 		return this.firstName + ' ' +  this.lastName;
+ 	}
+ }
+
+var john = {
+	firstName: "John",
+	lastName: "Doe"
+}
+
+///////////
+
+var a = {};
+var b = function(){};
+var c = [];
+//////////////////
+
+//Reflection and Extend
+
+ var person = {
+ 	firstName: Default,
+ 	lastName: Default,
+ 	getFullName: function(){
+ 		return this.firstName + ' ' +  this.lastName;
+ 	}
+ }
+
+var john = {
+	firstName: "John",
+	lastName: "Doe"
+}
+john.__proto__ = person;
+
+for(var prop in john){ // this gets rid of the person prototype
+	if(john.hasOwnProperty(prop)){
+		console.log(prop + ':' + john[prop]);
+	}
+}
+
+ var jane = {
+ 	address: "111 Main Street",
+ 	getFullName: function(){
+ 		return this.lastname + ',' + this.firstName;
+ 	}
+ }
+
+ var jim = {
+ 	getfirstName: function(){
+ 		return this.firstName;
+ 	}
+ }
+// Underscore Extend
+_.extend(john, jane, jim); // takes all methods and adds them to john
+// He gets jane's address, formal fullName and get firstName function.
+
+
+/////////////////////////
+//Building Objects --> setting the prototype
+// Constructors
+function Person(fn,lN){
+	this.firstName = fN;
+	this.lastName = lN;
+}
+
+Person.prototype.getFullName = function(){
+	return this.firstName + ' ' + this.lastName;
+}
+
+var john = new Person("john", "doe");
+console.log(john); --> //gives a new Object that is a Person 
+
+//prototype
+//properties are often in the constructor but funcitons/methods are usually on the prototype
+// This is because methods take up more memory space. You only need one.
+
+//Object.create and Pure Prototypal Inheritance
+
+var person = {
+	firstName: 'Default',
+	lastName: 'Default',
+	greet: function(){
+		return 'Hi ' + this.firstName;
+	}
+}
+
+var john = Object.create(person);
+john.firstName = 'john';
+
+
+
+
+/////////////////////////////////////////ASIDE/////////////////////////////////
+//Exercise 3
+
+//Inheritance
+
+//Difference between classical and prototypical inheritance
+//Classic makes copies down the chain
+//prototypical has chains that travel up and link to the prototype
+// Behavior Delegation
+
+	
+
+
+//OLOO
+//Objects Linked to Other Objects
+var Foo = {
+init: function(who){
+	this.me = who;
+	},
+identify: function() {
+	return "I am " + this.me;
+	}
+
+}
+
+ var Bar = Object.create(Foo);
+
+ Bar.speak = function(){
+ 	alert("Hello " + this.identify() + ".");
+ };
+
+ var b1 = Object.create(Bar);
+ b1.init("b1") --> //this is the who argument init from Foo
+ b1.speak(); //"Hello I am b1"
 
 
 
