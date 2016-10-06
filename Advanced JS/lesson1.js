@@ -473,7 +473,37 @@ a1.identify(); // "I am a1"
 //a1 delegates up the prototype chain to Foo function that has all methods from prototype
 // Examples of prototype linkage behavior delegation^^
  
+// javascript does not work in a 'copy' sort of mechanism but rather a Prototype linkage/Behavior Delegation manner
 
+//'this' tells us which building to look at while prototype tells us the floor to look on.
+// if not found, will traverse teh prototype until the method is found
+
+
+function Foo(who){
+	this.me = who;
+
+}
+
+Foo.prototype.identify = function(){
+	return "I am " + this.me;
+}
+
+function Bar (who){
+	Foo.call(this, who);
+}
+
+//Bar.prototype = new Foo();
+Bar.prototype = Object.create(Foo.prototype);
+
+Bar.prototype.speak = function() {
+	return "Hello " + this.identify() + ".";
+};
+
+var b1 = new Bar("b1");
+var b2 = new Bar("b2");
+
+b1.speak();// Hello I am b1.
+b2.speak(); // Hello i am b2.
 
 
 
